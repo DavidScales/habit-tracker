@@ -1,11 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <meta charset="utf-8">
-    <title>Todos</title>
+    <title>Projects</title>
   </head>
   <body>
-    <h1>Todos</h1>
+    <h1>Projects</h1>
     <script src="https://unpkg.com/vue"></script>
+
+    <div id="app">
+      <ul v-for="project in projects">
+        <li>
+          <h2>{{project.title}}</h2>
+          <ul v-for="task in project.tasks">
+            <li>{{task.text}}</li>
+          </ul>
+        </li>
+      </ul>
+      <button>Add project</button>
+    </div>
+
+    <div id="project">
+      <label for="project-title">Project Title</label>
+      <input type="text" name="project-title" value="" v-model="title">
+      <p>testing: {{title}}</p>
+      <br>
+      <h4>Tasks:</h4>
+      <label for="task-text">Task</label>
+      <input type="text" name="task-text" value="" v-model="newTask">
+      <p>testing: {{newTask}}</p>
+      <button @click="addTask">Add task</button>
+      <ul v-for="task in tasks">
+        <li>{{task}}</li>
+      </ul>
+      <button @click="addProject">Save</button>
+    </div>
+
+    <script>
+
+      var store = {
+        debug: true,
+        state: {
+          projects: [
+            {
+              id: 1,
+              title: 'Project X',
+              tasks: [
+                {id: 1, text: 'X1'}, {id: 2, text: 'X2'}, {id: 3, text: 'X3'}
+              ]
+            },
+            {
+              id: 2,
+              title: 'Project Y',
+              tasks: [
+                {id: 1, text: 'Y1'}, {id: 2, text: 'Y2'}, {id: 3, text: 'Y3'}
+              ]
+            },
+            {
+              id: 3,
+              title: 'Project Z',
+              tasks: [
+                {id: 1, text: 'Z1'}, {id: 2, text: 'Z2'}, {id: 3, text: 'Z3'}
+              ]
+            },
+          ]
+        },
+        getProjects() {
+          if (this.debug) {console.log('getProjects triggered');}
+          return this.state.projects;
+        },
+        addProject(project) {
+          if (this.debug) {console.log('addProject triggered with', project);}
+          this.state.projects.push(project);
+        }
+      };
+
+      var app = new Vue({
+        el: '#app',
+        data: {
+          projects: store.getProjects(),
+          // sharedState: store.state,
+          // privateState: {}
+        }
+      });
+
+      var project = new Vue({
+        el: '#project',
+        data: {
+          title: '',
+          newTask: '',
+          tasks: []
+        },
+        methods: {
+          addTask() {
+            let text = this.newTask && this.newTask.trim();
+            if (!text) {return;}
+            this.tasks.push(text);
+            this.newTask = '';
+          },
+          addProject() {
+            let newProject = {
+              title: this.title,
+              tasks: this.tasks.map(task => {
+                return {
+                  id: Date.now(),
+                  text: task};
+              })
+            };
+            store.addProject(newProject);
+          }
+        }
+      });
+    </script>
   </body>
 </html>
