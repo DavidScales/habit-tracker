@@ -19,33 +19,66 @@ export default new Vuex.Store({
   ],
   state: {
     projects: [
+      /* e.g.
       {
-        id: 1,
+        id: 1, // Date.now(),
         title: 'Project X',
+        note: 'This is project X',
+        color: 'blue',
         tasks: [
-          {id: 1, task: 'X1'}, {id: 2, task: 'X2'}, {id: 3, task: 'X3'}
+          {
+            id: 11, // Date.now()
+            title: 'subtask 1X',
+            time: 30, // minutes,
+            completed: false,
+            // dateCompleted: '2017-07-08',
+            note: 'This is subtask 1, of X',
+            sessions: [
+              {
+                id: 1499558096623, // Date.now(),
+                date: '2017-07-08',
+                start: 1499558096623, // Date.now()
+                end: 1499558386486, // Date.now()
+              },
+              {
+                id: 1499558405566, // Date.now(),
+                date: '2017-07-08',
+                start: 1499558405566, // Date.now()
+                end: 1499558438437, // Date.now()
+              }
+            ]
+          }
         ]
-      },
-      {
-        id: 2,
-        title: 'Project Y',
-        tasks: [
-          {id: 1, task: 'Y1'}, {id: 2, task: 'Y2'}, {id: 3, task: 'Y3'}
-        ]
-      },
-      {
-        id: 3,
-        title: 'Project Z',
-        tasks: [
-          {id: 1, task: 'Z1'}, {id: 2, task: 'Z2'}, {id: 3, task: 'Z3'}
-        ]
-      },
+      }
+      */
     ]
   },
   // mutations are used to modify app state (synchronously)
   mutations: {
-    addProject(state, project) {
-      state.projects.push(project);
+    saveProject: (state, projectToSave) => {
+      let existingProjectIndex = state.projects.findIndex(project => {
+        return project.id === projectToSave.id;
+      });
+
+      if (existingProjectIndex === -1) {
+        state.projects.push(projectToSave);
+      } else {
+        state.projects[existingProjectIndex] = projectToSave;
+      }
+    },
+    deleteProject: (state, id) => {
+      let existingProjectIndex = state.projects.findIndex(project => {
+        return project.id === id;
+      });
+      if (existingProjectIndex !== -1) {
+        state.projects.splice(existingProjectIndex, 1);
+      };
+    }
+  },
+  getters: {
+    getProjectById: (state, getters) => (id) => {
+      return state.projects.find(project => project.id === id);
     }
   }
+
 });

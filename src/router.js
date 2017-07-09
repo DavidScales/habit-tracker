@@ -17,9 +17,9 @@ export default new VueRouter({
   routes: [
     {
       name: 'project',
-      path: '/project',
+      path: '/project/:id',
       component: Project,
-      // props: true
+      props: true
     },
     {
       name: 'home',
