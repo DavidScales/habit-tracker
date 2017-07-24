@@ -9,6 +9,7 @@ import VueRouter from 'vue-router';
 // vue components represent the app's views
 import Home from './components/home.vue';
 import Project from './components/project.vue';
+import Task from './components/task.vue';
 
 Vue.use(VueRouter);
 
@@ -16,15 +17,21 @@ export default new VueRouter({
   mode: 'history',
   routes: [
     {
+      name: 'home',
+      path: '/',
+      component: Home
+    },
+    {
       name: 'project',
-      path: '/project/:id',
+      path: '/project/:projectId',
       component: Project,
       props: true
     },
     {
-      name: 'home',
-      path: '/',
-      component: Home
+      name: 'task',
+      path: '/project/:projectId/task/:taskId',
+      component: Task,
+      props: true
     },
     {
       path: '*',

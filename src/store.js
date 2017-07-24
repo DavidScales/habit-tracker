@@ -35,14 +35,14 @@ export default new Vuex.Store({
             note: 'This is subtask 1, of X',
             sessions: [
               {
-                id: 1499558096623, // Date.now(),
-                date: '2017-07-08',
+                // id: 1499558096623, // Date.now(),
+                // date: '2017-07-08',
                 start: 1499558096623, // Date.now()
                 end: 1499558386486, // Date.now()
               },
               {
-                id: 1499558405566, // Date.now(),
-                date: '2017-07-08',
+                // id: 1499558405566, // Date.now(),
+                // date: '2017-07-08',
                 start: 1499558405566, // Date.now()
                 end: 1499558438437, // Date.now()
               }
@@ -55,30 +55,53 @@ export default new Vuex.Store({
   },
   // mutations are used to modify app state (synchronously)
   mutations: {
-    saveProject: (state, projectToSave) => {
-      let existingProjectIndex = state.projects.findIndex(project => {
-        return project.id === projectToSave.id;
-      });
-
-      if (existingProjectIndex === -1) {
-        state.projects.push(projectToSave);
-      } else {
-        state.projects[existingProjectIndex] = projectToSave;
-      }
+    createProject: (state, projectToSave) => {
+      state.projects.push(projectToSave);
+    },
+    updateProject: (state, projectToSave) => {
+      let id = projectToSave.id;
+      let existingProjectIndex = findIndexById(state.projects, id);
+      if (existingProjectIndex === -1) {return;};
+      state.projects[existingProjectIndex] = projectToSave;
     },
     deleteProject: (state, id) => {
-      let existingProjectIndex = state.projects.findIndex(project => {
-        return project.id === id;
-      });
-      if (existingProjectIndex !== -1) {
-        state.projects.splice(existingProjectIndex, 1);
-      };
+      let existingProjectIndex = findIndexById(state.projects, id);
+      if (existingProjectIndex === -1) {return;}
+      state.projects.splice(existingProjectIndex, 1);
+    },
+    updateTask: (state, payload) => {
+      let taskToUpdate = payload.taskToUpdate;
+      let taskId = taskToUpdate.id;
+      let projectId = payload.projectId;
+      let existingProjectIndex = findIndexById(state.projects, projectId);
+      if (existingProjectIndex === -1) {return;}
+      let project = state.projects[existingProjectIndex];
+      let existingTaskIndex = findIndexById(project.tasks, taskId);
+      if (existingTaskIndex === -1) {return;};
+      project.tasks[existingTaskIndex] = taskToUpdate;
+      state.projects[existingProjectIndex] = project;
     }
   },
   getters: {
     getProjectById: (state, getters) => (id) => {
-      return state.projects.find(project => project.id === id);
+      return state.projects.find(project => project.id == id);
+    },
+    getTaskById: (state, getters) => (ids) => {
+      let taskId = ids.taskId;
+      let projectId = ids.projectId;
+      let project = getters.getProjectById(projectId);
+      if (!project) {return;}
+      return project.tasks.find(task => task.id == taskId);
     }
   }
 
 });
+
+// Helper functions
+
+function findIndexById(list, id) {
+  let index = list.findIndex(item => {
+    return item.id == id;
+  });
+  return index;
+}

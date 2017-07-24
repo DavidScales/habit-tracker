@@ -17,11 +17,11 @@ Represents the top level home view.
             p total time {{task.time}}
             p completed {{task.completed}}
             p note {{task.note}}
+            button(@click='editTask(task.id, project.id)') "Edit" task
             ul(v-for='session in task.sessions' :key='session.id')
               li
-                p date {{session.date}}
-                p time {{session.end}} - {{session.start}} = {{session.end - session.start}}
-        button(@click='editProject(project.id)') Edit project
+                p time {{session.end}} - {{session.start}} = {{parseInt((session.end - session.start) / 60000)}} min
+        button(@click='editProject(project.id)') "Edit" project
     button(@click='addProject') Add project
 </template>
 
@@ -37,10 +37,15 @@ export default {
   },
   methods: {
     addProject() {
-      this.$router.push({name: 'project', params: {id: 'new'}});
+      this.$router.push({name: 'project', params: {projectId: 'new'}});
     },
-    editProject(id) {
-      this.$router.push({name: 'project', params: {id: id}});
+    editProject(projectId) {
+      this.$router.push({name: 'project', params: {projectId: projectId}});
+    },
+    editTask(taskId, projectId) {
+      this.$router.push({name: 'task', params: {
+        taskId: taskId, projectId: projectId
+      }});
     }
   }
 };

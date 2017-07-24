@@ -35,28 +35,30 @@ Represents a top level view for adding a new project.
 
 <script>
 export default {
-  props: ['id'],
+  props: ['projectId'],
   data() {
-    let project = this.$store.getters.getProjectById(this.id);
-    if (this.id === 'new' || !project) {
-      return {
-        projectId: Date.now(),
-        projectTitle: '',
-        projectColor: '',
-        projectNote: '',
-        taskTitle: '',
-        taskNote: '',
-        tasks: []
-      };
+    if (this.projectId !== 'new') {
+      let project = this.$store.getters.getProjectById(this.projectId);
+      if (project) {
+        return {
+          projectTitle: project.title,
+          projectColor: project.color,
+          projectNote: project.note,
+          taskTitle: '',
+          taskNote: '',
+          tasks: project.tasks,
+          isNew: false
+        };
+      }
     }
     return {
-      projectId: project.id,
-      projectTitle: project.title,
-      projectColor: project.color,
-      projectNote: project.note,
+      projectTitle: '',
+      projectColor: '',
+      projectNote: '',
       taskTitle: '',
       taskNote: '',
-      tasks: project.tasks
+      tasks: [],
+      isNew: true
     };
   },
   methods: {
@@ -82,17 +84,21 @@ export default {
       let projectNote = this.projectNote && this.projectNote.trim();
       if (!(projectTitle && projectColor)) {return;}
       let projectToSave = {
-        id: this.projectId,
+        id: this.isNew ? Date.now() : this.projectId,
         title: projectTitle,
         note: projectNote,
         color: projectColor,
         tasks: this.tasks
       };
-      this.$store.commit('saveProject', projectToSave);
+      if (this.isNew) {
+        this.$store.commit('createProject', projectToSave);
+      } else {
+        this.$store.commit('updateProject', projectToSave);
+      }
       this.$router.push({name: 'home'});
     },
     deleteProject() {
-      this.$store.commit('deleteProject', this.id);
+      this.$store.commit('deleteProject', this.projectId);
       this.$router.push({name: 'home'});
     }
   }
