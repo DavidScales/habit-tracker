@@ -31,7 +31,7 @@ export default new Vuex.Store({
             title: 'subtask 1X',
             time: 30, // minutes,
             completed: false,
-            // dateCompleted: '2017-07-08',
+            timeCompleted: 4356789123, // Date.now()
             note: 'This is subtask 1, of X',
             sessions: [
               {

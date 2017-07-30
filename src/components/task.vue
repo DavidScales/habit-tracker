@@ -11,6 +11,7 @@ Represents a task within a project.
     p session time: {{this.formattedTime}}
     button(@click='start') start
     button(@click='done') done
+    button(@click='markComplete') task complete!
 </template>
 
 <script>
@@ -28,10 +29,9 @@ export default {
       title: task.title,
       time: task.time,
       completed: task.completed,
-      // dateCompleted: '2017-07-08',
+      timeCompleted: null,
       note: task.note,
       sessions: task.sessions,
-
       sessionStart: null,
       sessionEnd: null,
       seconds: 0,
@@ -49,6 +49,12 @@ export default {
     }
   },
   methods: {
+    markComplete() {
+      this.completed = true;
+      this.timeCompleted = Date.now();
+      this.saveTask();
+      this.$router.push({name: 'home'});
+    },
     start() {
       this.sessionStart = Date.now();
       this.timer();
@@ -86,7 +92,7 @@ export default {
         title: this.title,
         time: this.time,
         completed: this.completed,
-        // dateCompleted: '2017-07-08',
+        timeCompleted: this.timeCompleted,
         note: this.note,
         sessions: this.sessions
       };
