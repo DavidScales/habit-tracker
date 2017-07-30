@@ -60,35 +60,35 @@ export default new Vuex.Store({
     },
     updateProject: (state, projectToSave) => {
       let id = projectToSave.id;
-      let existingProjectIndex = findIndexById(state.projects, id);
-      if (existingProjectIndex === -1) {return;};
-      state.projects[existingProjectIndex] = projectToSave;
+      let projectIndex = findIndexById(state.projects, id);
+      if (projectIndex === -1) {return;};
+      state.projects[projectIndex] = projectToSave;
     },
     deleteProject: (state, id) => {
-      let existingProjectIndex = findIndexById(state.projects, id);
-      if (existingProjectIndex === -1) {return;}
-      state.projects.splice(existingProjectIndex, 1);
+      let projectIndex = findIndexById(state.projects, id);
+      if (projectIndex === -1) {return;}
+      state.projects.splice(projectIndex, 1);
     },
     updateTask: (state, payload) => {
       let taskToUpdate = payload.taskToUpdate;
       let taskId = taskToUpdate.id;
       let projectId = payload.projectId;
-      let existingProjectIndex = findIndexById(state.projects, projectId);
-      if (existingProjectIndex === -1) {return;}
-      let project = state.projects[existingProjectIndex];
-      let existingTaskIndex = findIndexById(project.tasks, taskId);
-      if (existingTaskIndex === -1) {return;};
-      project.tasks[existingTaskIndex] = taskToUpdate;
+      let projectIndex = findIndexById(state.projects, projectId);
+      if (projectIndex === -1) {return;}
+      let project = state.projects[projectIndex];
+      let taskIndex = findIndexById(project.tasks, taskId);
+      if (taskIndex === -1) {return;};
+      project.tasks[taskIndex] = taskToUpdate;
     },
     deleteTask: (state, ids) => {
       let taskId = ids.taskId;
       let projectId = ids.projectId;
-      let existingProjectIndex = findIndexById(state.projects, projectId);
-      if (existingProjectIndex === -1) {return;}
-      let project = state.projects[existingProjectIndex];
-      let existingTaskIndex = findIndexById(project.tasks, taskId);
-      if (existingTaskIndex === -1) {return;}
-      project.tasks.splice(existingTaskIndex, 1);
+      let projectIndex = findIndexById(state.projects, projectId);
+      if (projectIndex === -1) {return;}
+      let project = state.projects[projectIndex];
+      let taskIndex = findIndexById(project.tasks, taskId);
+      if (taskIndex === -1) {return;}
+      project.tasks.splice(taskIndex, 1);
     },
   },
   getters: {
