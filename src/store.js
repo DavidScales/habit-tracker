@@ -79,8 +79,17 @@ export default new Vuex.Store({
       let existingTaskIndex = findIndexById(project.tasks, taskId);
       if (existingTaskIndex === -1) {return;};
       project.tasks[existingTaskIndex] = taskToUpdate;
-      state.projects[existingProjectIndex] = project;
-    }
+    },
+    deleteTask: (state, ids) => {
+      let taskId = ids.taskId;
+      let projectId = ids.projectId;
+      let existingProjectIndex = findIndexById(state.projects, projectId);
+      if (existingProjectIndex === -1) {return;}
+      let project = state.projects[existingProjectIndex];
+      let existingTaskIndex = findIndexById(project.tasks, taskId);
+      if (existingTaskIndex === -1) {return;}
+      project.tasks.splice(existingTaskIndex, 1);
+    },
   },
   getters: {
     getProjectById: (state, getters) => (id) => {

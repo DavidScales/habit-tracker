@@ -12,6 +12,7 @@ Represents a task within a project.
     button(@click='start') start
     button(@click='done') done
     button(@click='markComplete') task complete!
+    button(@click='deleteTask') Delete task
 </template>
 
 <script>
@@ -101,6 +102,14 @@ export default {
         taskToUpdate: taskToUpdate,
         projectId: this.projectId
       })
+    },
+    deleteTask() {
+      this.$store.commit({
+        type: 'deleteTask',
+        taskId: this.taskId,
+        projectId: this.projectId
+      });
+      this.$router.push({name: 'home'});
     }
   }
 };
